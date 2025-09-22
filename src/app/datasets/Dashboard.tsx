@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { datasets, sizes, mods, formats, themes } from "./filters";
+import TableView from "./TableView";
 
 export default function Dashboard() {
   const [searchVal, setSearchVal] = useState<string>("");
@@ -260,7 +261,9 @@ export default function Dashboard() {
         </ScrollArea>
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={75} className="grow"></ResizablePanel>
+      <ResizablePanel defaultSize={75} className="grow">
+        <TableView />
+      </ResizablePanel>
     </ResizablePanelGroup>
   );
 }

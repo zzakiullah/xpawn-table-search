@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 
 export default function CustomHeader() {
   return (
-    <header className="flex flex-row items-center justify-between pl-2 pr-4 py-2 w-full h-12">
+    <header className="flex flex-row items-center justify-between pl-2 pr-4 py-2 w-full h-12 border-b border-neutral-200">
       <Link href="/" className="flex flex-row items-center gap-2 text-2xl font-semibold">
         <svg
           className="w-8 h-8"
