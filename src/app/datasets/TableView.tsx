@@ -38,7 +38,7 @@ import {
 } from "@/components/ui/table";
 
 import { getColumns } from "@/lib/getColumns";
-import { extractDataFromPathCSV, extractDataFromFileCSV } from "@/lib/parseCSV";
+import { extractDataFromPathCSV } from "@/lib/parseCSV";
 import { extractDataFromPathJSON } from "@/lib/parseJSON";
 
 export default function TableView() {
@@ -56,8 +56,7 @@ export default function TableView() {
 
   const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchVal(event.target.value);
-    // table.getColumn("email")?.setFilterValue(event.target.value);
-    // (table.getColumn("email")?.getFilterValue() as string) ?? ""
+    table.setGlobalFilter(event.target.value);
   };
 
   useEffect(() => {

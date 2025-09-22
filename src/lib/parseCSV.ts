@@ -1,65 +1,31 @@
 import Papa from "papaparse";
 
-export const extractDataFromFileCSV = (file: File) => {
-  Papa.parse(file, {
-    complete: (result) => {
-      const headers = result.meta.fields || [];
-      return {
-        headers: headers,
-        data: result.data,
-        error: null,
-      };
-    },
-    error: (error: Error) => {
-      return {
-        headers: null,
-        data: null,
-        error: error,
-      };
-    },
-    header: true, // Optionally, specify if the first row contains headers
-    skipEmptyLines: true,
-  });
-};
-
 export const extractDataFromPathCSV = async (path: string) => {
   try {
-    const response = await fetch(path); // Wait for the fetch request to complete
+    // Fetch the CSV file
+    const response = await fetch(path);
+
+    // Check if the response is valid
     if (!response.ok) {
-      console.error("Network response was not ok");
-      return {
-        headers: null,
-        data: null,
-        error: response.statusText,
-      };
+      throw new Error("Network response was not ok");
     }
-    const data = await response.text(); // Wait for the response to be parsed as JSON
-    Papa.parse(data, {
-      complete: (result) => {
-        const headers = result.meta.fields || [];
-        console.log(headers);
-        return {
-          headers: headers,
-          data: result.data,
-          error: null,
-        };
-      },
-      error: (error: Error) => {
-        return {
-          headers: null,
-          data: null,
-          error: error,
-        };
-      },
-      header: true, // Optionally, specify if the first row contains headers
-      skipEmptyLines: true,
+
+    // Get the CSV text
+    const csvText = await response.text();
+
+    // Parse the CSV data using Papa Parse
+    const result = Papa.parse(csvText, {
+      header: true, // Tells Papa to treat the first row as headers
+      skipEmptyLines: true, // Optionally skip empty lines
     });
+
+    // Extract headers and data
+    const headers = result.meta.fields || [];
+    const data = result.data || [];
+
+    return { headers, data, error: null }; // Return parsed data
   } catch (error) {
-    console.error("Error fetching data:", error);
-    return {
-      headers: null,
-      data: null,
-      error: error,
-    };
+    console.error("Error parsing CSV:", error);
+    return { headers: null, data: null, error }; // Return the error if any
   }
 };
