@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { FiFilter, FiSearch, FiDatabase, FiPlus, FiRotateCw } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiFilter, FiSearch, FiDatabase, FiRotateCw } from "react-icons/fi";
 
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,10 +11,12 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
-import { datasets, sizes, mods, formats, themes } from "./filters";
+import { IDataset, datasets, sizes, mods, formats, themes } from "./filters";
 import TableView from "./TableView";
 
 export default function Dashboard() {
+  const [filteredDatasets, setFilteredDatasets] = useState<IDataset[]>(datasets);
+
   const [searchVal, setSearchVal] = useState<string>("");
   const [minSize, setMinSize] = useState<number>(0);
   const [maxSize, setMaxSize] = useState<number>(sizes.length - 1);
@@ -32,13 +34,47 @@ export default function Dashboard() {
     new Array(themes.length).fill(false),
   );
 
+  useEffect(() => {
+    let newFilteredDatasets = datasets;
+
+    newFilteredDatasets =
+      searchVal.trim().length > 0
+        ? newFilteredDatasets.filter(
+            (d) =>
+              d.value.toLowerCase().includes(searchVal.trim().toLowerCase()) ||
+              d.fpath.toLowerCase().includes(searchVal.trim().toLowerCase()),
+          )
+        : newFilteredDatasets;
+
+    newFilteredDatasets = showModReset
+      ? newFilteredDatasets.filter((d) => selectedMods[d.modality])
+      : newFilteredDatasets;
+
+    newFilteredDatasets = showSizeReset
+      ? newFilteredDatasets.filter(
+          (d) => sizes[minSize].value <= d.size && d.size <= sizes[maxSize].value,
+        )
+      : newFilteredDatasets;
+
+    newFilteredDatasets = showFormatReset
+      ? newFilteredDatasets.filter((d) => selectedFormats[d.format])
+      : newFilteredDatasets;
+
+    newFilteredDatasets = showThemeReset
+      ? newFilteredDatasets.filter((d) => selectedThemes[d.theme])
+      : newFilteredDatasets;
+
+    setFilteredDatasets(newFilteredDatasets);
+  }, [searchVal, minSize, maxSize, selectedMods, selectedFormats, selectedThemes]);
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchVal(event.target.value);
+    const newSearchVal = event.target.value;
+    setSearchVal(newSearchVal);
   };
 
-  const handleUpload = () => {
-    document.getElementById("upload-dataset")?.click();
-  };
+  // const handleUpload = () => {
+  //   document.getElementById("upload-dataset")?.click();
+  // };
 
   const handleModClick = (index: number) => {
     const newMods = selectedMods.map((m, i) => (i === index ? !m : m));
@@ -116,7 +152,7 @@ export default function Dashboard() {
             <div className="relative">
               <Input
                 type="text"
-                placeholder="Search data"
+                placeholder="Search datasets..."
                 className="pl-9 pr-3"
                 value={searchVal}
                 onChange={handleSearchChange}
@@ -124,29 +160,6 @@ export default function Dashboard() {
               <div className="flex flex-col items-center justify-center absolute top-0 bottom-0 mx-3 mb-0.25 text-neutral-500">
                 <FiSearch />
               </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-row items-center gap-2 text-md">
-                <FiDatabase />
-                <h3 className="font-medium">Show dataset(s)</h3>
-              </div>
-              {datasets.map((d) => (
-                <div key={d.id} className="flex flex-row items-center gap-2 text-md cursor-pointer">
-                  <Checkbox id={`dataset-${d.id}`} className="cursor-pointer" />
-                  <Label htmlFor={`dataset-${d.id}`} className="font-normal cursor-pointer">
-                    {d.value}
-                  </Label>
-                </div>
-              ))}
-              <Button variant="outline" className="mt-1 cursor-pointer" onClick={handleUpload}>
-                <div className="flex flex-row items-center gap-2 text-md">
-                  <FiPlus />
-                  <label htmlFor="upload-dataset" className="cursor-pointer">
-                    Upload Dataset
-                  </label>
-                  <input id="upload-dataset" type="file" accept=".csv" className="hidden"></input>
-                </div>
-              </Button>
             </div>
             <div className="flex flex-col gap-2 w-full">
               <div className="flex flex-row items-center justify-between gap-2 text-sm">
@@ -256,6 +269,29 @@ export default function Dashboard() {
                   </Badge>
                 ))}
               </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row items-center gap-2 text-md">
+                <FiDatabase />
+                <h3 className="font-medium">View dataset(s)</h3>
+              </div>
+              {filteredDatasets.map((d) => (
+                <div key={d.id} className="flex flex-row items-center gap-2 text-md cursor-pointer">
+                  <Checkbox id={`dataset-${d.id}`} className="cursor-pointer" />
+                  <Label htmlFor={`dataset-${d.id}`} className="font-normal cursor-pointer">
+                    {d.value}
+                  </Label>
+                </div>
+              ))}
+              {/* <Button variant="outline" className="mt-1 cursor-pointer" onClick={handleUpload}>
+                <div className="flex flex-row items-center gap-2 text-md">
+                  <FiPlus />
+                  <label htmlFor="upload-dataset" className="cursor-pointer">
+                    Upload Dataset
+                  </label>
+                  <input id="upload-dataset" type="file" accept=".csv" className="hidden"></input>
+                </div>
+              </Button> */}
             </div>
           </div>
         </ScrollArea>

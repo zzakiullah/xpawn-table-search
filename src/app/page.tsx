@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FiArrowRight, FiUpload } from "react-icons/fi";
+import { FiArrowRight, FiExternalLink } from "react-icons/fi";
 
 import { Button } from "@/components/ui/button";
 
@@ -17,13 +17,10 @@ export default function Home() {
             </Link>
           </Button>
           <Button asChild variant="secondary">
-            <div className="cursor-pointer">
-              <label htmlFor="files" className="cursor-pointer">
-                Upload File
-              </label>
-              <input id="files" type="file" accept=".csv" className="hidden"></input>
-              <FiUpload />
-            </div>
+            <Link href="https://github.com/zzakiullah/xpawn-table-search" target="_blank">
+              View GitHub
+              <FiExternalLink />
+            </Link>
           </Button>
         </div>
       </main>
