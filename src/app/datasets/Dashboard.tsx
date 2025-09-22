@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { IDataset, datasets, sizes, mods, formats, themes } from "./filters";
 
-import TableView from "./TableView";
 import MultiTableLayout from "@/app/datasets/MultiTableLayout";
 
 export default function Dashboard() {
@@ -146,7 +145,7 @@ export default function Dashboard() {
   };
 
   const onViewDatasetChange = (id: number) => {
-    let newViewDatasets = viewDatasets.map((v, i) => (i === id ? !v : v));
+    const newViewDatasets = viewDatasets.map((v, i) => (i === id ? !v : v));
     setViewDatasets(newViewDatasets);
   };
 

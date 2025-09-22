@@ -18,6 +18,14 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Write-Up
+## Design Choices & Thought Process
 
+- Tech Stack: React, TypeScript, Next.js, Shadcn UI
+- 
 
+## Additional Features
+
+## (Hypothetical) Next Steps
+
+- Wanted an option for the user to upload their own files (I actually had most of it ready but ran out of time, so I left it commented out)
+- Ideally the multi-table views should also stack horizontally too; at the moment they only stack vertically since it was faster to program that way

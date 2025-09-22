@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import {
-  ColumnDef,
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
@@ -13,18 +12,14 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { LuArrowUpDown, LuChevronDown } from "react-icons/lu";
+import { LuChevronDown } from "react-icons/lu";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  // DropdownMenuItem,
-  // DropdownMenuLabel,
-  // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
