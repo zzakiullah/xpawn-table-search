@@ -46,3 +46,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Ideally the multi-table views should also stack horizontally too; at the moment they only stack vertically since it was faster to program that way
 - Add skeleton loaders when fetching data (I had the components imported but never implemented them)
 - Add option to open dataset in a separate page
+- Not as many comments in the code as I would like (sorry about that, again that was due to time)
