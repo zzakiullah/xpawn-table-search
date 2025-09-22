@@ -3,24 +3,25 @@ import { VscTable, VscJson } from "react-icons/vsc";
 
 const datasets = [
   {
-    id: "dataset-1",
+    id: 0,
     value: "Patient Risk Prediction",
+    path: "",
   },
   {
-    id: "dataset-2",
+    id: 1,
     value: "Protein Binding Sequence",
   },
   {
-    id: "dataset-3",
+    id: 2,
     value: "Lung Cancer",
   },
   {
-    id: "dataset-4",
+    id: 3,
     value: "Fast Food Restaurants",
   },
   {
-    id: "dataset-5",
-    value: "Recipes",
+    id: 4,
+    value: "Payments",
   },
 ];
 
@@ -117,6 +118,10 @@ const themes = [
   {
     label: "Automotive",
     icon: "🚗",
+  },
+  {
+    label: "Finance",
+    icon: "💸",
   },
 ];
 

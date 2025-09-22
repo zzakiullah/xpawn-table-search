@@ -128,12 +128,12 @@ export default function Dashboard() {
             <div className="flex flex-col gap-2">
               <div className="flex flex-row items-center gap-2 text-md">
                 <FiDatabase />
-                <h3 className="font-medium">Select dataset(s)</h3>
+                <h3 className="font-medium">Show dataset(s)</h3>
               </div>
               {datasets.map((d) => (
                 <div key={d.id} className="flex flex-row items-center gap-2 text-md cursor-pointer">
-                  <Checkbox id={d.id} className="cursor-pointer" />
-                  <Label htmlFor={d.id} className="font-normal cursor-pointer">
+                  <Checkbox id={`dataset-${d.id}`} className="cursor-pointer" />
+                  <Label htmlFor={`dataset-${d.id}`} className="font-normal cursor-pointer">
                     {d.value}
                   </Label>
                 </div>
