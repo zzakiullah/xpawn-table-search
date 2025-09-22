@@ -41,7 +41,13 @@ import { getColumns } from "@/lib/getColumns";
 import { extractDataFromPathCSV } from "@/lib/parseCSV";
 import { extractDataFromPathJSON } from "@/lib/parseJSON";
 
-export default function TableView() {
+interface ITableView {
+  title: string;
+  path: string;
+  format: number;
+}
+
+export default function TableView({ title, path, format }: ITableView) {
   const [searchVal, setSearchVal] = useState<string>("");
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,16 +67,30 @@ export default function TableView() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { headers, data: dat, error } = await extractDataFromPathJSON("/payments.json");
-      if (error) {
-        console.error(error);
-      }
-      if (headers !== null) {
-        const cols = getColumns(headers);
-        setColumns(cols);
-      }
-      if (dat !== null) {
-        setData(dat);
+      if (format === 0) {
+        const { headers, data: dat, error } = await extractDataFromPathCSV(path);
+        if (error) {
+          console.error(error);
+        }
+        if (headers !== null) {
+          const cols = getColumns(headers);
+          setColumns(cols);
+        }
+        if (dat !== null) {
+          setData(dat);
+        }
+      } else {
+        const { headers, data: dat, error } = await extractDataFromPathJSON(path);
+        if (error) {
+          console.error(error);
+        }
+        if (headers !== null) {
+          const cols = getColumns(headers);
+          setColumns(cols);
+        }
+        if (dat !== null) {
+          setData(dat);
+        }
       }
     };
     fetchData();
@@ -96,45 +116,43 @@ export default function TableView() {
   });
 
   return (
-    <ScrollArea>
+    <ScrollArea className="flex flex-grow h-full">
       <div className="flex flex-col w-full gap-4 p-6">
-        <div className="flex flex-row items-center justify-between gap-2">
-          <h2 className="text-2xl font-semibold">Payments</h2>
-          <div className="flex flex-row gap-2">
-            <Input
-              placeholder="Search table..."
-              value={searchVal}
-              onChange={onSearchChange}
-              className="w-sm"
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="ml-auto">
-                  Columns <LuChevronDown />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {table
-                  .getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    );
-                  })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+        <h2 className="text-2xl font-semibold">{title}</h2>
+        <div className="flex flex-row items-center justify-start gap-2">
+          <Input
+            placeholder="Search table..."
+            value={searchVal}
+            onChange={onSearchChange}
+            className="w-sm"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="auto">
+                Columns <LuChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className="overflow-hidden rounded-md border">
-          <Table>
+          <Table className="overflow-hidden">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -171,11 +189,7 @@ export default function TableView() {
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="text-muted-foreground flex-1 text-sm">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
+        <div className="flex items-center justify-start gap-6">
           <div className="space-x-2">
             <Button
               variant="outline"
@@ -194,8 +208,13 @@ export default function TableView() {
               Next
             </Button>
           </div>
+          <div className="text-muted-foreground flex-1 text-sm">
+            {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected.
+          </div>
         </div>
       </div>
+      <ScrollBar orientation="vertical" />
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
   );

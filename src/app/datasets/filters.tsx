@@ -3,7 +3,7 @@ import { VscTable, VscJson } from "react-icons/vsc";
 
 interface IDataset {
   id: number;
-  value: string;
+  title: string;
   fpath: string;
   modality: number;
   size: number;
@@ -14,7 +14,7 @@ interface IDataset {
 const datasets: IDataset[] = [
   {
     id: 0,
-    value: "Patient Risk Prediction",
+    title: "Patient Risk Prediction",
     fpath: "/Full_Patient_Risk_Prediction_Dataset.csv",
     modality: 2,
     size: 1500,
@@ -23,7 +23,7 @@ const datasets: IDataset[] = [
   },
   {
     id: 1,
-    value: "Protein Binding Sequence",
+    title: "Protein Binding Sequence",
     fpath: "/peptides.csv",
     modality: 2,
     size: 16370,
@@ -32,7 +32,7 @@ const datasets: IDataset[] = [
   },
   {
     id: 2,
-    value: "Lung Cancer",
+    title: "Lung Cancer",
     fpath: "/Lung_Cancer_Survey.csv",
     modality: 2,
     size: 309,
@@ -41,7 +41,7 @@ const datasets: IDataset[] = [
   },
   {
     id: 3,
-    value: "Fast Food Restaurants",
+    title: "Fast Food Restaurants",
     fpath: "/Fast_Food_Restaurants.csv",
     modality: 2,
     size: 10000,
@@ -50,7 +50,7 @@ const datasets: IDataset[] = [
   },
   {
     id: 4,
-    value: "Payments",
+    title: "Payments",
     fpath: "/payments.json",
     modality: 2,
     size: 5,

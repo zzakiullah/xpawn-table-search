@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FiFilter, FiSearch, FiDatabase, FiRotateCw } from "react-icons/fi";
+import { FiFilter, FiSearch, FiRotateCw } from "react-icons/fi";
 
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -12,10 +12,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { IDataset, datasets, sizes, mods, formats, themes } from "./filters";
+
 import TableView from "./TableView";
+import MultiTableLayout from "@/app/datasets/MultiTableLayout";
 
 export default function Dashboard() {
   const [filteredDatasets, setFilteredDatasets] = useState<IDataset[]>(datasets);
+  const [viewDatasets, setViewDatasets] = useState<boolean[]>(
+    new Array(datasets.length).fill(false),
+  );
 
   const [searchVal, setSearchVal] = useState<string>("");
   const [minSize, setMinSize] = useState<number>(0);
@@ -41,7 +46,7 @@ export default function Dashboard() {
       searchVal.trim().length > 0
         ? newFilteredDatasets.filter(
             (d) =>
-              d.value.toLowerCase().includes(searchVal.trim().toLowerCase()) ||
+              d.title.toLowerCase().includes(searchVal.trim().toLowerCase()) ||
               d.fpath.toLowerCase().includes(searchVal.trim().toLowerCase()),
           )
         : newFilteredDatasets;
@@ -138,6 +143,11 @@ export default function Dashboard() {
     const newThemes = selectedThemes.map(() => false);
     setSelectedThemes(newThemes);
     setShowThemeReset(false);
+  };
+
+  const onViewDatasetChange = (id: number) => {
+    let newViewDatasets = viewDatasets.map((v, i) => (i === id ? !v : v));
+    setViewDatasets(newViewDatasets);
   };
 
   return (
@@ -271,15 +281,17 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="flex flex-row items-center gap-2 text-md">
-                <FiDatabase />
-                <h3 className="font-medium">View dataset(s)</h3>
-              </div>
+              <h3 className="font-medium">View dataset(s)</h3>
               {filteredDatasets.map((d) => (
                 <div key={d.id} className="flex flex-row items-center gap-2 text-md cursor-pointer">
-                  <Checkbox id={`dataset-${d.id}`} className="cursor-pointer" />
+                  <Checkbox
+                    id={`dataset-${d.id}`}
+                    className="cursor-pointer"
+                    checked={viewDatasets[d.id]}
+                    onCheckedChange={() => onViewDatasetChange(d.id)}
+                  />
                   <Label htmlFor={`dataset-${d.id}`} className="font-normal cursor-pointer">
-                    {d.value}
+                    {d.title}
                   </Label>
                 </div>
               ))}
@@ -298,7 +310,13 @@ export default function Dashboard() {
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={75} className="grow">
-        <TableView />
+        {viewDatasets.includes(true) ? (
+          <MultiTableLayout viewDatasets={viewDatasets} />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <p className="font-normal">Select a dataset to view</p>
+          </div>
+        )}
       </ResizablePanel>
     </ResizablePanelGroup>
   );
